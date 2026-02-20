@@ -1,5 +1,7 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { z } from 'zod'
+import { db } from '@/infra/db'
+import { schema } from '@/infra/db/schemas'
 
 export const createLinkRoute: FastifyPluginAsyncZod = async server => {
   server.post(
@@ -17,7 +19,12 @@ export const createLinkRoute: FastifyPluginAsyncZod = async server => {
       },
     },
     async (request, reply) => {
-      return reply.status(201).send({ urlId: 'abc123' })
+      await db.insert(schema.links).values({
+        url: 'teste2',
+        remoteKey: 'abc123',
+        remoteUrl: 'http://example.com',
+      })
+      return reply.status(201).send({ urlId: 'teste2' })
     }
   )
 }
