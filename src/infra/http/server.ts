@@ -9,7 +9,6 @@ import {
   serializerCompiler,
   validatorCompiler,
 } from 'fastify-type-provider-zod'
-import { env } from '@/env'
 import { createLinkRoute } from './routes/create-link'
 
 const server = fastify()
