@@ -3,8 +3,8 @@ import { db } from '@/infra/db'
 import { schema } from '@/infra/db/schemas'
 
 const createLinkInput = z.object({
-  url: z.string(),
-  customName: z.string(),
+  url: z.string().url(),
+  customName: z.string().min(3).max(32),
 })
 
 type CreateLinkInput = z.input<typeof createLinkInput>

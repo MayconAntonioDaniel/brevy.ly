@@ -1,5 +1,5 @@
 {
-  "id": "33ae6b3d-103c-4470-ad75-b3b415e40a81",
+  "id": "7514f0c0-7750-4f8c-88e9-a8ada87e8283",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -16,6 +16,12 @@
         },
         "url": {
           "name": "url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "custom_name": {
+          "name": "custom_name",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -49,6 +55,13 @@
           "nullsNotDistinct": false,
           "columns": [
             "url"
+          ]
+        },
+        "links_custom_name_unique": {
+          "name": "links_custom_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "custom_name"
           ]
         },
         "links_remote_key_unique": {
