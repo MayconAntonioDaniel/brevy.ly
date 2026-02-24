@@ -1,5 +1,5 @@
 {
-  "id": "7514f0c0-7750-4f8c-88e9-a8ada87e8283",
+  "id": "7aa7593b-139c-4b29-a4ba-e3a15f0fa603",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -14,17 +14,31 @@
           "primaryKey": true,
           "notNull": true
         },
-        "url": {
-          "name": "url",
+        "original_url": {
+          "name": "original_url",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "custom_name": {
-          "name": "custom_name",
+        "short_url": {
+          "name": "short_url",
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "access_count": {
+          "name": "access_count",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'0'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
         },
         "remote_key": {
           "name": "remote_key",
@@ -37,31 +51,24 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
         }
       },
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "links_url_unique": {
-          "name": "links_url_unique",
+        "links_original_url_unique": {
+          "name": "links_original_url_unique",
           "nullsNotDistinct": false,
           "columns": [
-            "url"
+            "original_url"
           ]
         },
-        "links_custom_name_unique": {
-          "name": "links_custom_name_unique",
+        "links_short_url_unique": {
+          "name": "links_short_url_unique",
           "nullsNotDistinct": false,
           "columns": [
-            "custom_name"
+            "short_url"
           ]
         },
         "links_remote_key_unique": {

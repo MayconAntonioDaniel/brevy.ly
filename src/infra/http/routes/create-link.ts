@@ -9,8 +9,8 @@ export const createLinkRoute: FastifyPluginAsyncZod = async server => {
       schema: {
         summary: 'Create a new shortened link',
         body: z.object({
-          url: z.string().url(), // Campo para URL original
-          customName: z.string().min(3).max(32), // Campo para nome personalizado
+          originalUrl: z.string().url(), // Campo para URL original
+          shortUrl: z.string().min(3), // Campo para nome personalizado
         }),
         response: {
           201: z.object({ response: z.string() }),
@@ -22,13 +22,13 @@ export const createLinkRoute: FastifyPluginAsyncZod = async server => {
       },
     },
     async (request, reply) => {
-      const { url, customName } = await request.body
+      const { originalUrl, shortUrl } = await request.body
 
-      if (!url || !customName) {
+      if (!originalUrl || !shortUrl) {
         return reply.status(400).send({ message: 'URL and Name are required' })
       }
 
-      await createLink({ url, customName })
+      await createLink({ originalUrl, shortUrl })
 
       return reply.status(201).send({ response: 'teste' })
     }

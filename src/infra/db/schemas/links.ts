@@ -5,9 +5,10 @@ export const links = pgTable('links', {
   id: text('id')
     .primaryKey()
     .$defaultFn(() => uuidv7()),
-  url: text('url').notNull().unique(),
-  customName: text('custom_name').notNull().unique(),
+  originalUrl: text('original_url').notNull().unique(),
+  shortUrl: text('short_url').notNull().unique(),
+  accessCount: text('access_count').default('0').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
   remoteKey: text('remote_key').notNull().unique(),
   remoteUrl: text('remote_url').notNull(),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
 })
