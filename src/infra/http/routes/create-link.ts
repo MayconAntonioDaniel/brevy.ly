@@ -10,27 +10,40 @@ export const createLinkRoute: FastifyPluginAsyncZod = async server => {
         summary: 'Create a new shortened link',
         body: z.object({
           originalUrl: z.string().url(), // Campo para URL original
-          shortUrl: z.string().min(3), // Campo para nome personalizado
+          shortUrl: z
+            .string()
+            .min(1)
+            .regex(/^[a-zA-Z0-9_-]+$/), // Campo para nome personalizado
         }),
         response: {
-          201: z.object({ response: z.string() }),
-          400: z.object({ message: z.string() }).describe('Validation error'),
+          201: z
+            .object({ response: z.string() })
+            .describe('Link criado com sucesso'),
+          400: z.object({ message: z.string() }).describe('Erro de validação'),
           409: z
             .object({ message: z.string() })
-            .describe('Name already exists'),
+            .describe('URL encurtada já existe'),
         },
       },
     },
     async (request, reply) => {
-      const { originalUrl, shortUrl } = await request.body
+      const { originalUrl, shortUrl } = request.body
 
       if (!originalUrl || !shortUrl) {
-        return reply.status(400).send({ message: 'URL and Name are required' })
+        return reply
+          .status(400)
+          .send({ message: 'URL e URL encurtada são obrigatórios' })
       }
 
-      await createLink({ originalUrl, shortUrl })
-
-      return reply.status(201).send({ response: 'teste' })
+      try {
+        await createLink({ originalUrl, shortUrl: shortUrl.trim() })
+        return reply.status(201).send({ response: 'Link criado com sucesso' })
+      } catch (error: any) {
+        if (error.code === 'SHORT_URL_EXISTS') {
+          return reply.status(409).send({ message: 'URL encurtada já existe' })
+        }
+        return reply.status(400).send({ message: error.message })
+      }
     }
   )
 }
