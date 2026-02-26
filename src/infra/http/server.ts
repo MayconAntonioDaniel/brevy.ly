@@ -10,6 +10,7 @@ import {
   validatorCompiler,
 } from 'fastify-type-provider-zod'
 import { createLinkRoute } from './routes/create-link'
+import { getLinksRoute } from './routes/get-links'
 
 const server = fastify()
 
@@ -47,6 +48,7 @@ server.register(fastifySwaggerUi, {
 })
 
 server.register(createLinkRoute)
+server.register(getLinksRoute)
 
 server.listen({ port: 3333, host: '0.0.0.0' }).then(() => {
   console.log('HTTP server running!')
