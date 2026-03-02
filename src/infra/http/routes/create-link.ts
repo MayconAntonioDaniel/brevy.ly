@@ -4,10 +4,10 @@ import { createLink } from '@/app/functions/create-link'
 
 export const createLinkRoute: FastifyPluginAsyncZod = async server => {
   server.post(
-    '/links',
+    '/create-link',
     {
       schema: {
-        summary: 'Create link',
+        summary: 'Criar link',
         body: z.object({
           originalUrl: z.string().url(), // Campo para URL original
           shortUrl: z

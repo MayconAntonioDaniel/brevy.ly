@@ -5,10 +5,10 @@ import { unwrapEither } from '@/shared/either'
 
 export const getLinksRoute: FastifyPluginAsyncZod = async server => {
   server.get(
-    '/links',
+    '/get-links',
     {
       schema: {
-        summary: 'Get links',
+        summary: 'Buscar links',
         querystring: z.object({
           searchQuery: z.string().optional(),
           sortBy: z.enum(['createdAt']).optional(),

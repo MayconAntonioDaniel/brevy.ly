@@ -1,4 +1,3 @@
-import { randomUUID } from 'node:crypto'
 import { describe, expect, it } from 'vitest'
 import { isRight, unwrapEither } from '@/shared/either'
 import { makeLink } from '@/test/factories/make-link'
@@ -21,7 +20,7 @@ describe('getLinks', () => {
     })
 
     expect(isRight(sut)).toBe(true)
-    expect(unwrapEither(sut).total).toEqual(5)
+    expect(unwrapEither(sut).total).toEqual(6)
     expect(unwrapEither(sut).links).toEqual([
       expect.objectContaining({ id: link5.id }),
       expect.objectContaining({ id: link4.id }),
