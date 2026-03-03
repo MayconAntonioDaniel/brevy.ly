@@ -11,6 +11,7 @@ import {
 } from 'fastify-type-provider-zod'
 import { createLinkRoute } from './routes/create-link'
 import { deleteLinkRoute } from './routes/delete-link'
+import { exportLinksCsvRoute } from './routes/export-links-csv'
 import { getLinksRoute } from './routes/get-links'
 import { getOriginalUrlRoute } from './routes/get-original-url'
 import { incrementAccessRoute } from './routes/increment-access'
@@ -55,6 +56,7 @@ server.register(getLinksRoute)
 server.register(deleteLinkRoute)
 
 server.register(getOriginalUrlRoute)
+server.register(exportLinksCsvRoute)
 server.register(incrementAccessRoute)
 
 server.listen({ port: 3333, host: '0.0.0.0' }).then(() => {
