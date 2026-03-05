@@ -1,83 +1,84 @@
-import { PutObjectCommand } from '@aws-sdk/client-s3'
-import { randomUUID } from 'crypto'
-import dayjs from 'dayjs'
-import writeXlsxFile from 'write-excel-file/node'
-import { env } from '@/env'
-import { r2 } from '@/infra/storage/client'
-import { getLinks } from './get-links'
+import { PassThrough, Transform } from 'node:stream'
+import { pipeline } from 'node:stream/promises'
+import { stringify } from 'csv-stringify'
+import { ilike } from 'drizzle-orm'
+import z from 'zod'
+import { db, pg } from '@/infra/db'
+import { schema } from '@/infra/db/schemas'
+import { uploadFileToStorage } from '@/infra/storage/upload-file-to-storage'
+import { Either, makeRight } from '@/shared/either'
 
-export async function exportLinksToCsvAndUpload() {
-  // Busca todos os links
-  const result = await getLinks({ page: 1, pageSize: 10000 })
-  const links = result.right?.links || []
+const exportLinksInput = z.object({
+  searchQuery: z.string().optional(),
+})
 
-  const objects = links.map(el => ({
-    id: el.id,
-    originalUrl: el.originalUrl,
-    shortUrl: el.shortUrl,
-    accessCount: el.accessCount,
-    createdAt: dayjs(el.createdAt).format('YYYY-MM-DD HH:mm:ss'),
-  }))
+type ExportLinksInput = z.input<typeof exportLinksInput>
 
-  type LinkObject = {
-    id: string
-    originalUrl: string
-    shortUrl: string
-    accessCount: number
-    createdAt: string
-  }
+type ExportLinksOutput = {
+  url: string
+}
 
-  const schema = [
-    {
-      column: 'ID',
-      type: String,
-      value: (item: LinkObject) => item.id,
-      width: 30,
-    },
-    {
-      column: 'URL Original',
-      type: String,
-      value: (item: LinkObject) => item.originalUrl,
-      width: 30,
-    },
-    {
-      column: 'URL Encurtada',
-      type: String,
-      value: (item: LinkObject) => item.shortUrl,
-      width: 20,
-    },
-    {
-      column: 'Acessos',
-      type: Number,
-      value: (item: LinkObject) => item.accessCount,
-      width: 5,
-    },
-    {
-      column: 'Data de Criação',
-      type: String,
-      value: (item: LinkObject) => item.createdAt,
-      width: 20,
-    },
-  ]
+export async function exportLinksToCsvAndUpload(
+  input: ExportLinksInput
+): Promise<Either<never, ExportLinksOutput>> {
+  const { searchQuery } = exportLinksInput.parse(input)
 
-  const fileName = `Relatório-URL-Encurtadas(${randomUUID()}).xlsx`
-  const buffer = (await writeXlsxFile(objects, {
-    schema,
-    buffer: true,
-  })) as Buffer
-
-  // Upload para R2
-  await r2.send(
-    new PutObjectCommand({
-      Bucket: env.CLOUDFLARE_BUCKET,
-      Key: fileName,
-      Body: buffer,
-      ContentType:
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  const { sql, params } = await db
+    .select({
+      id: schema.links.id,
+      originalUrl: schema.links.originalUrl,
+      shortUrl: schema.links.shortUrl,
+      accessCount: schema.links.accessCount,
+      createdAt: schema.links.createdAt,
     })
+    .from(schema.links)
+    .where(
+      searchQuery
+        ? ilike(schema.links.originalUrl, `%${searchQuery}%`)
+        : undefined
+    )
+    .toSQL()
+
+  const cursor = pg.unsafe(sql, params as string[]).cursor(2)
+
+  const csv = stringify({
+    delimiter: ',',
+    header: true,
+    columns: [
+      { key: 'id', header: 'ID' },
+      { key: 'original_url', header: 'URL Original' },
+      { key: 'short_url', header: 'URL Encurtada' },
+      { key: 'access_count', header: 'Acessos' },
+      { key: 'created_at', header: 'Data de Criação' },
+    ],
+  })
+
+  const uploadToStorageStream = new PassThrough()
+
+  const convertToCSVPipeline = pipeline(
+    cursor,
+    new Transform({
+      objectMode: true,
+      transform(chunks: unknown[], encoding, callback) {
+        for (const chunk of chunks) {
+          this.push(chunk)
+        }
+
+        callback()
+      },
+    }),
+    csv,
+    uploadToStorageStream
   )
 
-  // Retorna URL pública
-  const url = `${env.CLOUDFLARE_PUBLIC_URL}/${fileName}`
-  return url
+  const uploadToStorage = uploadFileToStorage({
+    folder: 'downloads',
+    contentType: 'text/csv',
+    fileName: `${new Date().toISOString()}-uploads.csv`,
+    contentStream: uploadToStorageStream,
+  })
+
+  const [{ url }] = await Promise.all([uploadToStorage, convertToCSVPipeline])
+
+  return makeRight({ url })
 }
