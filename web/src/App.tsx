@@ -1,6 +1,9 @@
+import CreateLinks from "./components/create-links";
+
 export function App() {
   return (
-    <h1 className='text-primary'>Hello World</h1>
+    <main className="h-dvh flex flex-col items-center justify-center p-10">
+      <CreateLinks/>
+    </main>
   )
 }
-
