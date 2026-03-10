@@ -4,7 +4,7 @@ import { FaRegCopy } from "react-icons/fa";
 import { useLinks } from "../store/links";
 
 export default function List() {
-  const { links } = useLinks();
+  const links = useLinks(store => store.links)
 
   return (
     <div>

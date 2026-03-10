@@ -1,4 +1,7 @@
 import { create } from 'zustand'
+import { enableMapSet } from 'immer';
+import { immer } from 'zustand/middleware/immer'
+import { uploadLinkToStorage } from '../http/upload-link-to-storage';
 
 type Urls = {
   originalUrl: string,
@@ -14,7 +17,17 @@ type LinkState = {
   setShortened: (value: string) => void;
 };
 
-export const useLinks = create<LinkState>((set, get) => {
+enableMapSet()
+
+export const useLinks = create<LinkState, [['zustand/immer', never]]>(immer((set, get) => {
+  async function processUpload(uploadId: string) {
+    const link = get().links.get(uploadId)
+
+    if (!link) return
+
+    await uploadLinkToStorage(link.originalUrl, link.shortUrl)
+  }
+
   function addLinks(urls: Urls[]) {
     for (const url of urls) {
       const linkId = crypto.randomUUID()
@@ -25,8 +38,10 @@ export const useLinks = create<LinkState>((set, get) => {
       }
 
       set(state => {
-        return { links: state.links.set(linkId, link)}
+        state.links.set(linkId, link)
       })
+
+      processUpload(linkId)
     }
   }
 
@@ -38,4 +53,4 @@ export const useLinks = create<LinkState>((set, get) => {
     setOriginal: (value: string) => set({ original: value }),
     setShortened: (value: string) => set({ shortened: value }),
   }
-})
+}))
