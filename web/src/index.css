@@ -17,4 +17,11 @@
   --color-gray-600: #1f2025;
 
   --font-openSans: "Open Sans", sans-serif;
+
+  --animate-loading-bar: loading-bar 1.5s infinite linear;
+
+  @keyframes loading-bar {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(200%); }
+  }
 }
