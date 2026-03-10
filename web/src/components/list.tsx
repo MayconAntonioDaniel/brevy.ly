@@ -1,10 +1,23 @@
+import { useEffect } from "react";
+import { useLinks } from "../store/links";
 import { IoIosLink } from "react-icons/io";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { FaRegCopy } from "react-icons/fa";
-import { useLinks } from "../store/links";
 
 export default function List() {
-  const links = useLinks(store => store.links)
+  const links = useLinks((store) => store.links);
+  const fetchLinks = useLinks((store) => store.fetchLinks);
+  const deleteLink = useLinks((store) => store.deleteLink);
+
+  useEffect(() => {
+    fetchLinks();
+  }, [fetchLinks]);
+
+  const handleDelete = (shortUrl: string) => {
+    if (window.confirm("Tem certeza que deseja deletar este link ?")) {
+      deleteLink(shortUrl)
+    }
+  }
 
   return (
     <div>
@@ -28,16 +41,19 @@ export default function List() {
                   brev.ly/
                 </span>
                 <a className="text-primary text-sm font-semibold">
-                  {link.originalUrl}
+                  {link.shortUrl}
                 </a>
-                <h4 className="text-xs text-gray-500">{link.shortUrl}</h4>
+                <h4 className="text-xs text-gray-500">{link.originalUrl}</h4>
               </div>
               <div className="flex items-center gap-1 text-gray-500">
                 <h4 className="text-xs mr-4">30 acessos</h4>
                 <button className="bg-gray-200 p-2 rounded-md cursor-pointer hover:drop-shadow-sm hover:drop-shadow-primary">
                   <FaRegCopy size="16px" />
                 </button>
-                <button className="bg-gray-200 p-2 rounded-md cursor-pointer hover:drop-shadow-sm hover:drop-shadow-primary">
+                <button
+                  className="bg-gray-200 p-2 rounded-md cursor-pointer hover:drop-shadow-sm hover:drop-shadow-primary"
+                  onClick={() => handleDelete(link.shortUrl)}
+                >
                   <RiDeleteBin6Line size="16px" />
                 </button>
               </div>

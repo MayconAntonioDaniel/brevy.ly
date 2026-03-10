@@ -8,7 +8,7 @@ export async function uploadLinkToStorage(originalUrl: string, shortUrl: string)
 
   const response = await axios.post<{ url: string}>('http://localhost:3333/create-link', {
     originalUrl,
-    shortUrl
+    shortUrl,
   })
 
   return { originalUrl: response.data.url }
