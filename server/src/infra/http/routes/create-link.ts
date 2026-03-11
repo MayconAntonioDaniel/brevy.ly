@@ -13,7 +13,7 @@ export const createLinkRoute: FastifyPluginAsyncZod = async server => {
           shortUrl: z
             .string()
             .min(1)
-            .regex(/^[a-zA-Z0-9_-]+$/), // Campo para nome personalizado
+            .regex(/^[a-z0-9-]+$/), // Campo para nome personalizado
         }),
         response: {
           201: z

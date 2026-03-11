@@ -27,7 +27,7 @@ export default function RedirectPage() {
         <h1 className="text-4xl font-bold">Redirecionando...</h1>
         <p className="text-center font-semibold text-gray-500">
           O link será aberto automaticamente em alguns instantes. 
-          Não foi redirecionado? <a className='text-primary' target="_blank" href={window.location.href}>Acesse aqui</a>
+          Não foi redirecionado? <a className='text-primary underline' target="_blank" href={window.location.href}>Acesse aqui</a>
         </p>
       </div>
     </div>

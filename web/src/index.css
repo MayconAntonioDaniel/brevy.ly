@@ -6,22 +6,40 @@
   --color-primary: #2c46b1;
   --color-primary-hover: #2c4091;
   --color-primary-disabled: #95a2d8;
-
+  
   --color-danger: #b12c4d;
-
+  
   --color-gray-100: #f9f9fb;
   --color-gray-200: #e4e6ec;
   --color-gray-300: #cdcfd5;
   --color-gray-400: #74798b;
   --color-gray-500: #4d505c;
   --color-gray-600: #1f2025;
-
+  
   --font-openSans: "Open Sans", sans-serif;
-
+  
   --animate-loading-bar: loading-bar 1.5s infinite linear;
-
+  
   @keyframes loading-bar {
     0% { transform: translateX(-100%); }
     100% { transform: translateX(200%); }
   }
+}
+
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #2c46b1 #e4e6ec;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 12px;
+  background: #e4e6ec;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #2c46b1;
+  border-radius: 0;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #e4e6ec;
+  border-radius: 0;
 }

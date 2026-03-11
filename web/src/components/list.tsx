@@ -3,9 +3,11 @@ import { useLinks } from "../store/links";
 import { IoIosLink } from "react-icons/io";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { FaRegCopy } from "react-icons/fa";
+import { toast } from "sonner";
 
 export default function List() {
   const links = useLinks((store) => store.links);
+  const loading = useLinks((store) => store.loading);
   const fetchLinks = useLinks((store) => store.fetchLinks);
   const deleteLink = useLinks((store) => store.deleteLink);
 
@@ -19,9 +21,19 @@ export default function List() {
     }
   };
 
+  const handleCopy = (link: string) => {
+    navigator.clipboard.writeText(link);
+    toast.info(
+      <div>
+        <span className="font-bold">Link copiado com sucesso!</span>
+        <p>{`O link: ${link} foi copiado para a área de transferência.`}</p>
+      </div>
+    );
+  };
+
   return (
     <div>
-      {links.size === 0 ? (
+      {!loading && links.size === 0 ? (
         <>
           <div className=" bg-gray-300 h-px w-full mb-4" />
           <div className="flex flex-col justify-center items-center">
@@ -37,22 +49,24 @@ export default function List() {
             <div className=" bg-gray-300 h-px w-full mb-4 mt-4" />
             <div className="flex justify-between">
               <div>
-                <span className="text-primary text-sm font-semibold">
+                <span className="text-primary flex text-sm font-semibold">
                   brev.ly/
-                </span>
-                <a
-                  className="text-primary text-sm font-semibold text-ellipsis"
-                  href={`redirect/${link.shortUrl}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {link.shortUrl}
+                  <a
+                    className="text-primary text-sm font-semibold truncate w-20 sm:w-60 block"
+                    href={`redirect/${link.shortUrl}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >
+                    {link.shortUrl}
                 </a>
-                <h4 className="text-xs text-gray-500 text-ellipsis">{link.originalUrl}</h4>
+                </span>
+                <h4 className="text-xs text-gray-500 truncate w-35 sm:w-60">{link.originalUrl}</h4>
               </div>
               <div className="flex items-center gap-1 text-gray-500">
                 <h4 className="text-xs mr-4">30 acessos</h4>
-                <button className="bg-gray-200 p-2 rounded-md cursor-pointer hover:drop-shadow-sm hover:drop-shadow-primary">
+                <button className="bg-gray-200 p-2 rounded-md cursor-pointer hover:drop-shadow-sm hover:drop-shadow-primary"
+                  onClick={ () => handleCopy(`https://brev.ly/${link.shortUrl}`) }
+                >
                   <FaRegCopy size="16px" />
                 </button>
                 <button

@@ -9,7 +9,7 @@ const createLinkInput = z.object({
   shortUrl: z
     .string()
     .min(1)
-    .regex(/^[a-zA-Z0-9_-]+$/),
+    .regex(/^[a-z0-9-]+$/), 
 })
 
 type CreateLinkInput = z.input<typeof createLinkInput>
