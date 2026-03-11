@@ -19,13 +19,13 @@ export const getOriginalUrlRoute: FastifyPluginAsyncZod = async server => {
     },
     async (request, reply) => {
       const { shortUrl } = request.params
-
+      
       const result = await getOriginalUrl({ shortUrl })
       if (!result || !result.right) {
         return reply.status(404).send({ message: 'Link não encontrado' })
       }
 
-      return reply.redirect(result.right.originalUrl)
+      return reply.send(result.right.originalUrl)
     }
   )
 }

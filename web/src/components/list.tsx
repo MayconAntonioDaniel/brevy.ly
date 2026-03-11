@@ -15,9 +15,9 @@ export default function List() {
 
   const handleDelete = (shortUrl: string) => {
     if (window.confirm("Tem certeza que deseja deletar este link ?")) {
-      deleteLink(shortUrl)
+      deleteLink(shortUrl);
     }
-  }
+  };
 
   return (
     <div>
@@ -40,10 +40,15 @@ export default function List() {
                 <span className="text-primary text-sm font-semibold">
                   brev.ly/
                 </span>
-                <a className="text-primary text-sm font-semibold">
+                <a
+                  className="text-primary text-sm font-semibold text-ellipsis"
+                  href={`redirect/${link.shortUrl}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   {link.shortUrl}
                 </a>
-                <h4 className="text-xs text-gray-500">{link.originalUrl}</h4>
+                <h4 className="text-xs text-gray-500 text-ellipsis">{link.originalUrl}</h4>
               </div>
               <div className="flex items-center gap-1 text-gray-500">
                 <h4 className="text-xs mr-4">30 acessos</h4>
