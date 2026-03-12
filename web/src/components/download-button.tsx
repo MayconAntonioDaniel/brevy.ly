@@ -10,7 +10,7 @@ export function DownloadButton() {
     setLoading(true)
     const response = await DownloadLinksCsv();
     console.log(response)
-    if (response && response.data && response.data.url) {s
+    if (response && response.data && response.data.url) {
       window.open(response.data.url, '_blank');
     }
     setLoading(false)
