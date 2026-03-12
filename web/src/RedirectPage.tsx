@@ -1,16 +1,25 @@
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
+import { useLinks } from "./store/links";
 import axios from "axios";
+import { incrementAccessCount } from "./http/increment-access-count";
 
 export default function RedirectPage() {
   const { shortUrl } = useParams();
-
+  const incrementLinkAccess = useLinks(store => store.incrementLinkAccess);
+  
   useEffect(() => {
     async function fetchOriginalUrl() {
       try {
+        if (shortUrl) {
+          const url = await incrementAccessCount(shortUrl);
+          incrementLinkAccess(shortUrl, url);
+        }
+
         const response = await axios.get(
           `http://localhost:3333/redirect/${shortUrl}`,
         );
+        
         window.location.href = response.data;
       } catch (error) {
         console.error("Erro ao buscar URL original:", error);
@@ -18,7 +27,7 @@ export default function RedirectPage() {
     }
 
     fetchOriginalUrl();
-  }, [shortUrl]);
+  }, [shortUrl, incrementLinkAccess]);
 
   return (
     <div className="h-dvh p-10 flex items-center justify-center font-openSans">

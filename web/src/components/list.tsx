@@ -11,6 +11,8 @@ export default function List() {
   const fetchLinks = useLinks((store) => store.fetchLinks);
   const deleteLink = useLinks((store) => store.deleteLink);
 
+  console.log('links', links)
+
   useEffect(() => {
     fetchLinks();
   }, [fetchLinks]);
@@ -22,7 +24,8 @@ export default function List() {
   };
 
   const handleCopy = (link: string) => {
-    navigator.clipboard.writeText(link);
+    const url = `${window.location.origin}/redirect/${link}`;
+    navigator.clipboard.writeText(url);
     toast.info(
       <div>
         <span className="font-bold">Link copiado com sucesso!</span>
@@ -52,20 +55,20 @@ export default function List() {
                 <span className="text-primary flex text-sm font-semibold">
                   brev.ly/
                   <a
-                    className="text-primary text-sm font-semibold truncate w-20 sm:w-60 block"
-                    href={`redirect/${link.shortUrl}`}
+                    href={`${window.location.origin}/redirect/${link.shortUrl}`}
                     target="_blank"
+                    className="text-primary text-sm font-semibold truncate w-20 sm:w-60 block"
                     rel="noopener noreferrer"
-                    >
+                  >
                     {link.shortUrl}
-                </a>
+                  </a>
                 </span>
                 <h4 className="text-xs text-gray-500 truncate w-35 sm:w-60">{link.originalUrl}</h4>
               </div>
               <div className="flex items-center gap-1 text-gray-500">
                 <h4 className="text-xs mr-4">{link.accessCount}</h4>
                 <button className="bg-gray-200 p-2 rounded-md cursor-pointer hover:drop-shadow-sm hover:drop-shadow-primary"
-                  onClick={ () => handleCopy(`http://localhost:5173/${link.shortUrl}`) }
+                  onClick={ () => handleCopy(link.shortUrl)}
                 >
                   <FaRegCopy size="16px" />
                 </button>

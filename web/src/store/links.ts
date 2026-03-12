@@ -16,6 +16,7 @@ type LinkState = {
   addLinks: (urls: Urls[]) => void;
   fetchLinks: () => Promise<void>;
   deleteLink: (linkId: string) => Promise<void>;
+  incrementLinkAccess: (shortUrl: string, newCount: number) => void;
   original: string;
   shortened: string;
   setOriginal: (value: string) => void;
@@ -86,6 +87,20 @@ export const useLinks = create<LinkState, [["zustand/immer", never]]>(
       });
     }
 
+    function incrementLinkAccess(shortUrl: string, newCount: number) {
+      console.log('shortUrl', shortUrl, 'newCount', newCount)
+      set((state) => {
+        const entry = Array.from(state.links.entries()).find(
+          ([, link]) => link.shortUrl === shortUrl
+        );
+
+        if (entry) {
+          const [id, link] = entry;
+          state.links.set(id, { ...link, accessCount: newCount });
+        }
+      });
+    }
+
     return {
       links: new Map(),
       addLinks,
@@ -97,6 +112,7 @@ export const useLinks = create<LinkState, [["zustand/immer", never]]>(
       loading: false,
       loadingSaveLink: false,
       deleteLink,
+      incrementLinkAccess,
     };
   }),
 );
