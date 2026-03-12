@@ -1,5 +1,5 @@
 {
-  "id": "069ed23e-ec20-40fb-bfd7-8b5565b217ca",
+  "id": "7920e15a-fc07-452e-9a61-ea17a38e3a19",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -57,13 +57,6 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "links_original_url_unique": {
-          "name": "links_original_url_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "original_url"
-          ]
-        },
         "links_short_url_unique": {
           "name": "links_short_url_unique",
           "nullsNotDistinct": false,

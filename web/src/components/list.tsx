@@ -63,9 +63,9 @@ export default function List() {
                 <h4 className="text-xs text-gray-500 truncate w-35 sm:w-60">{link.originalUrl}</h4>
               </div>
               <div className="flex items-center gap-1 text-gray-500">
-                <h4 className="text-xs mr-4">30 acessos</h4>
+                <h4 className="text-xs mr-4">{link.accessCount}</h4>
                 <button className="bg-gray-200 p-2 rounded-md cursor-pointer hover:drop-shadow-sm hover:drop-shadow-primary"
-                  onClick={ () => handleCopy(`https://brev.ly/${link.shortUrl}`) }
+                  onClick={ () => handleCopy(`http://localhost:5173/${link.shortUrl}`) }
                 >
                   <FaRegCopy size="16px" />
                 </button>

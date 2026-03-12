@@ -28,30 +28,31 @@ enableMapSet();
 
 export const useLinks = create<LinkState, [["zustand/immer", never]]>(
   immer((set, get) => {
-    async function processUpload(uploadId: string) {
-      const link = get().links.get(uploadId);
+    async function processUpload(linkId: string, urlData: Urls) {
+      console.log(urlData)
 
-      if (!link) return;
-
-      await uploadLinkToStorage(link.originalUrl, link.shortUrl);
-      set({ loadingSaveLink: false });
+      const uploadResult = await uploadLinkToStorage(urlData.originalUrl, urlData.shortUrl);
+      console.log(!uploadResult)
+      if (!uploadResult) {
+        set({ loadingSaveLink: false });
+        return
+      }
+      set((state) => {
+        const newLink: Urls = {
+          ...urlData,
+          accessCount: 0,
+        };
+        state.links.set(linkId, newLink);
+        state.loadingSaveLink = false;
+      });
     }
 
     function addLinks(urls: Urls[]) {
       set({ loadingSaveLink: true });
       for (const url of urls) {
         const linkId = crypto.randomUUID();
-
-        const link: Urls = {
-          originalUrl: url.originalUrl,
-          shortUrl: url.shortUrl,
-        };
-
-        set((state) => {
-          state.links.set(linkId, link);
-        });
-
-        processUpload(linkId);
+     
+        processUpload(linkId, url);
       }
     }
 

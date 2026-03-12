@@ -36,7 +36,7 @@ server.setErrorHandler((error, request, reply) => {
 
 server.register(fastifyCors, { 
   origin: '*',
-  methods: ['GET', 'POST', 'DELETE', 'PATCH'], 
+  methods: ['GET', 'POST', 'DELETE', 'PATCH', 'OPTIONS'], 
 })
 
 server.register(fastifyMultipart)

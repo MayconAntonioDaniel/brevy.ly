@@ -6,7 +6,6 @@ CREATE TABLE "links" (
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"remote_key" text NOT NULL,
 	"remote_url" text NOT NULL,
-	CONSTRAINT "links_original_url_unique" UNIQUE("original_url"),
 	CONSTRAINT "links_short_url_unique" UNIQUE("short_url"),
 	CONSTRAINT "links_remote_key_unique" UNIQUE("remote_key")
 );
