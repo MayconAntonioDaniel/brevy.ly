@@ -3,8 +3,8 @@ import { basename, extname } from 'node:path'
 import { Readable } from 'node:stream'
 import { Upload } from '@aws-sdk/lib-storage'
 import z from 'zod'
-import { env } from '@/env'
 import { r2 } from './client'
+import { env } from 'node:process'
 
 const uploadFileToStorageInput = z.object({
   folder: z.enum(['downloads']),

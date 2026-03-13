@@ -22,7 +22,6 @@ export const exportLinksCsvRoute: FastifyPluginAsyncZod = async server => {
       const { searchQuery } = request.query
 
       const result = await exportLinksToCsvAndUpload({ searchQuery })
-
       const { url } = unwrapEither(result)
 
       return reply.status(200).send({ url })

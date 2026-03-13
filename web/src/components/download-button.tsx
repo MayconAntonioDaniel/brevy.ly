@@ -9,10 +9,15 @@ export function DownloadButton() {
   const handleDownload = async () => {
     setLoading(true)
     const response = await DownloadLinksCsv();
-    console.log(response)
-    if (response && response.data && response.data.url) {
-      window.open(response.data.url, '_blank');
+    
+    if (response) {
+      const link = document.createElement('a');
+      link.href = response;
+      link.target = '_blank';
+      link.download = 'links.csv';
+      link.click();
     }
+
     setLoading(false)
   };
 

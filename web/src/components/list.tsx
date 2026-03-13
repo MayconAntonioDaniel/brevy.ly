@@ -15,6 +15,12 @@ export default function List() {
 
   useEffect(() => {
     fetchLinks();
+      const handleFocus = () => {
+      fetchLinks()
+    };
+
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
   }, [fetchLinks]);
 
   const handleDelete = (shortUrl: string) => {
@@ -25,6 +31,7 @@ export default function List() {
 
   const handleCopy = (link: string) => {
     const url = `${window.location.origin}/redirect/${link}`;
+    console.log('copying url', url)
     navigator.clipboard.writeText(url);
     toast.info(
       <div>

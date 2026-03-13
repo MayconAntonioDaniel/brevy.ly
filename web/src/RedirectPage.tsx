@@ -1,19 +1,16 @@
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
-import { useLinks } from "./store/links";
 import axios from "axios";
 import { incrementAccessCount } from "./http/increment-access-count";
 
 export default function RedirectPage() {
   const { shortUrl } = useParams();
-  const incrementLinkAccess = useLinks(store => store.incrementLinkAccess);
   
   useEffect(() => {
     async function fetchOriginalUrl() {
       try {
         if (shortUrl) {
-          const url = await incrementAccessCount(shortUrl);
-          incrementLinkAccess(shortUrl, url);
+          await incrementAccessCount(shortUrl);
         }
 
         const response = await axios.get(
@@ -27,7 +24,7 @@ export default function RedirectPage() {
     }
 
     fetchOriginalUrl();
-  }, [shortUrl, incrementLinkAccess]);
+  }, []);
 
   return (
     <div className="h-dvh p-10 flex items-center justify-center font-openSans">
