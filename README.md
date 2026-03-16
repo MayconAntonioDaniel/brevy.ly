@@ -9,16 +9,17 @@ Um encurtador de URLs moderno, com backend em Fastify + Drizzle ORM + PostgreSQL
    cd server && npm install
    cd ../web && npm install
    ```
-2. Suba o banco de dados PostgreSQL (há um `docker-compose.yml` em `server`).
+2. Configure o arquivo `.env` na pasta `server` com as variáveis necessárias (veja o exemplo em `.env.test`).
+3. Suba o banco de dados PostgreSQL (há um `docker-compose.yml` em `server`).
    ```sh
    cd server
    docker compose up -d
    ```
-3. Rode o backend:
+4. Rode o backend:
    ```sh
    npm run build && npm start
    ```
-4. Rode o frontend:
+5. Rode o frontend:
    ```sh
    cd ../web
    npm run dev
@@ -26,4 +27,4 @@ Um encurtador de URLs moderno, com backend em Fastify + Drizzle ORM + PostgreSQL
 
 ## Observação importante sobre download de CSV do Cloudflare
 
-Ao baixar o CSV armazenado no Cloudflare R2, pode ocorrer um problema de rota: o Cloudflare cria uma rota extra chamada `/short-url`. Se o download não iniciar automaticamente, adicione `/short-url` ao final da URL no navegador para concluir o download corretamente.
+Ao baixar o CSV armazenado no Cloudflare R2, pode ocorrer um problema de rota: o Cloudflare cria uma rota extra com nome do seu Bucket. Se o download não iniciar automaticamente, adicione `/{nome do seu bucket}` após a sua URL pública.
