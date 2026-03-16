@@ -11,16 +11,16 @@ export default function List() {
   const fetchLinks = useLinks((store) => store.fetchLinks);
   const deleteLink = useLinks((store) => store.deleteLink);
 
-  console.log('links', links)
-
   useEffect(() => {
     fetchLinks();
-      const handleFocus = () => {
-      fetchLinks()
+    const handleVisibilityChange = () => {
+    if (document.visibilityState === "visible") {
+      fetchLinks();
+      }
     };
 
-    window.addEventListener('focus', handleFocus);
-    return () => window.removeEventListener('focus', handleFocus);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
   }, [fetchLinks]);
 
   const handleDelete = (shortUrl: string) => {

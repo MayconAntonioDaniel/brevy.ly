@@ -27,12 +27,11 @@ type LinkState = {
 enableMapSet();
 
 export const useLinks = create<LinkState, [["zustand/immer", never]]>(
-  immer((set, get) => {
+  immer((set) => {
     async function processUpload(linkId: string, urlData: Urls) {
       console.log(urlData)
 
       const uploadResult = await uploadLinkToStorage(urlData.originalUrl, urlData.shortUrl);
-      console.log(!uploadResult)
       if (!uploadResult) {
         set({ loadingSaveLink: false });
         return

@@ -8,7 +8,7 @@
     "dev": "tsx watch --env-file .env.test src/infra/http/server.ts",
     "prod": "tsx watch --env-file .env src/infra/http/server.ts",
     "build": "tsup src/**/*.ts --format esm",
-    "start": "node dist/server.mjs",
+    "start": "npm run db:generate && npm run db:migrate && dotenv -e .env -- node dist/infra/http/server.js",
     "test": "dotenv -e .env -- vitest run",
     "test:watch": "dotenv -e .env -- vitest",
     "db:generate": "drizzle-kit generate",
